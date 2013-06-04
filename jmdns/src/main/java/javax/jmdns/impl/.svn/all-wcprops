@@ -1,0 +1,131 @@
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/main/java/javax/jmdns/impl
+END
+NetworkTopologyDiscoveryImpl.java
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/main/java/javax/jmdns/impl/NetworkTopologyDiscoveryImpl.java
+END
+DNSOutgoing.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/main/java/javax/jmdns/impl/DNSOutgoing.java
+END
+DNSEntry.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/main/java/javax/jmdns/impl/DNSEntry.java
+END
+DNSIncoming.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/main/java/javax/jmdns/impl/DNSIncoming.java
+END
+DNSCache.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/main/java/javax/jmdns/impl/DNSCache.java
+END
+JmmDNSImpl.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/main/java/javax/jmdns/impl/JmmDNSImpl.java
+END
+NetworkTopologyEventImpl.java
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/main/java/javax/jmdns/impl/NetworkTopologyEventImpl.java
+END
+DNSTaskStarter.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/main/java/javax/jmdns/impl/DNSTaskStarter.java
+END
+DNSQuestion.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/main/java/javax/jmdns/impl/DNSQuestion.java
+END
+DNSStatefulObject.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/main/java/javax/jmdns/impl/DNSStatefulObject.java
+END
+DNSRecord.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/main/java/javax/jmdns/impl/DNSRecord.java
+END
+ServiceEventImpl.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/main/java/javax/jmdns/impl/ServiceEventImpl.java
+END
+package-info.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/main/java/javax/jmdns/impl/package-info.java
+END
+NameRegister.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/main/java/javax/jmdns/impl/NameRegister.java
+END
+HostInfo.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/main/java/javax/jmdns/impl/HostInfo.java
+END
+ListenerStatus.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/main/java/javax/jmdns/impl/ListenerStatus.java
+END
+DNSMessage.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/main/java/javax/jmdns/impl/DNSMessage.java
+END
+DNSListener.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/main/java/javax/jmdns/impl/DNSListener.java
+END
+JmDNSImpl.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/main/java/javax/jmdns/impl/JmDNSImpl.java
+END
+ServiceInfoImpl.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/main/java/javax/jmdns/impl/ServiceInfoImpl.java
+END
+SocketListener.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/main/java/javax/jmdns/impl/SocketListener.java
+END

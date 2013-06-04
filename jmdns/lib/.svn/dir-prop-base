@@ -1,0 +1,16 @@
+K 10
+svn:ignore
+V 154
+jmdns.jar
+easymock-*.jar
+junit-*.jar
+javax.jmdns_*.jar
+cglib-nodep-2.2.jar
+objenesis-1.2.jar
+bnd.jar
+cglib-nodep.jar
+easymock.jar
+junit.jar
+objenesis.jar
+
+END

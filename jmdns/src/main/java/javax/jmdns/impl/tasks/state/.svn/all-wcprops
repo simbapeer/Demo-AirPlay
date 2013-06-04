@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/main/java/javax/jmdns/impl/tasks/state
+END
+package-info.java
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/main/java/javax/jmdns/impl/tasks/state/package-info.java
+END
+Renewer.java
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/main/java/javax/jmdns/impl/tasks/state/Renewer.java
+END
+Announcer.java
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/main/java/javax/jmdns/impl/tasks/state/Announcer.java
+END
+DNSStateTask.java
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/main/java/javax/jmdns/impl/tasks/state/DNSStateTask.java
+END
+Prober.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/main/java/javax/jmdns/impl/tasks/state/Prober.java
+END
+Canceler.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/main/java/javax/jmdns/impl/tasks/state/Canceler.java
+END

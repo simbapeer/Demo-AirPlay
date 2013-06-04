@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/main/java/javax/jmdns
+END
+ServiceEvent.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/main/java/javax/jmdns/ServiceEvent.java
+END
+package-info.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/main/java/javax/jmdns/package-info.java
+END
+ServiceListener.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/main/java/javax/jmdns/ServiceListener.java
+END
+JmmDNS.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/main/java/javax/jmdns/JmmDNS.java
+END
+NetworkTopologyEvent.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/main/java/javax/jmdns/NetworkTopologyEvent.java
+END
+ServiceTypeListener.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/main/java/javax/jmdns/ServiceTypeListener.java
+END
+JmDNS.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/main/java/javax/jmdns/JmDNS.java
+END
+NetworkTopologyListener.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/main/java/javax/jmdns/NetworkTopologyListener.java
+END
+ServiceInfo.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/main/java/javax/jmdns/ServiceInfo.java
+END
+NetworkTopologyDiscovery.java
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/main/java/javax/jmdns/NetworkTopologyDiscovery.java
+END

@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/test/java/javax/jmdns/test
+END
+DNSStatefulObjectTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/test/java/javax/jmdns/test/DNSStatefulObjectTest.java
+END
+TextUpdateTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/test/java/javax/jmdns/test/TextUpdateTest.java
+END
+DNSCacheTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/test/java/javax/jmdns/test/DNSCacheTest.java
+END
+DNSMessageTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/test/java/javax/jmdns/test/DNSMessageTest.java
+END
+JmDNSTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/test/java/javax/jmdns/test/JmDNSTest.java
+END
+ServiceInfoTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/test/java/javax/jmdns/test/ServiceInfoTest.java
+END

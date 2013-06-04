@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/sample/java/samples
+END
+ListServices.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/sample/java/samples/ListServices.java
+END
+DiscoverServices.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/sample/java/samples/DiscoverServices.java
+END
+DiscoverServiceTypes.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/sample/java/samples/DiscoverServiceTypes.java
+END
+RegisterService.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/sample/java/samples/RegisterService.java
+END
+TestShutdownHook.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/sample/java/samples/TestShutdownHook.java
+END
+ITunesRemotePairing.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/sample/java/samples/ITunesRemotePairing.java
+END
+OpenJmDNS.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/sample/java/samples/OpenJmDNS.java
+END
+package.html
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svnroot/jmdns/!svn/ver/315/tags/jmdns-3.4.1/src/sample/java/samples/package.html
+END

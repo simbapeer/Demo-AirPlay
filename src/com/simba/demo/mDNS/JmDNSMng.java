@@ -68,6 +68,8 @@ public class JmDNSMng {
                     mJmDNS.addServiceListener(AirPlay.TYPE_TP, mSampleListener);
                     mJmDNS.addServiceListener(RAOP.TYPE_TP, mSampleListener);
                     Log.i(tag, ">>>>>>>>>>>>>>>>>> Create JmDNS Succeed!! <<<<<<<<<<<<<<<<<");
+                } else {
+                    Log.e(tag, "X <<<<<<<<<<<<<<<<< Create JmDNS Failed!! WiFi disabled! >>>>>>>>>>>>>>>>>>>>");
                 }
 
             } catch (IOException e) {

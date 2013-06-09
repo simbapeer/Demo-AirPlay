@@ -16,7 +16,6 @@ import android.net.wifi.WifiInfo;
 import android.util.Log;
 
 import com.simba.demo.airplay.WiFiMng;
-import com.simba.demo.airplay.lab.SimbaHttpServer;
 import com.simba.demo.mDNS.JmDNSMng;
 import com.simba.demo.utils.SocketDemo;
 import com.simba.demo.utils.SocketProcessor;
@@ -73,18 +72,16 @@ public class AirPlay {
     private int mPort;
     private Map<String, String> mProps;
     private ServerSocket mSS = null;
+    private MirroringDaemon mMirroringDaemon;
 
     /** FIXME 待修正 */
     private static final int SUPPORTED_FEATURES = FEATURE_Video |
             FEATURE_Photo |
-            FEATURE_VideoFairPlay |
             FEATURE_VideoHTTPLiveStreams |
             FEATURE_Slideshow |
-            FEATURE_BYTE6 |
             FEATURE_Screen |
             FEATURE_ScreenRotate |
             FEATURE_AudioRedundant |
-            FEATURE_FPSAPv2pt5_AES_GCM |
             FEATURE_PhotoCaching;
 
     static {
@@ -119,6 +116,14 @@ public class AirPlay {
     private Context mContext;
     private Worker mWorker = null;
 
+    public void start() {
+        mMirroringDaemon.start();
+        // new SocketDemo(7100).start();
+        registerService();
+        mWorker.start();
+        new SocketDemo(1234).start(); // TEST CODE
+    }
+
     private AirPlay(JmDNS mDNSService, Context context) {
         mContext = context;
         Random random = new Random();
@@ -146,14 +151,9 @@ public class AirPlay {
         mServiceInfo = ServiceInfo.create(TYPE_TP, srvName, "", mPort, 0, 0, false, mProps);
         LOGW("mDNSService Created!");
         LOGD(toString());
-
-        new SimbaHttpServer(7000).start();
-        new SimbaHttpServer(7100).start();
-//        new SocketDemo(7000).start();
-//        new SocketDemo(7100).start();
-        registerService();
+        mMirroringDaemon = new MirroringDaemon();
         mWorker = new Worker();
-        mWorker.start();
+        start();
     }
 
     private void registerService() {
@@ -190,8 +190,10 @@ public class AirPlay {
             while (mRunning && !Thread.currentThread().isInterrupted()) {
 
                 try {
+                    LOGI(">>>>>>>>>>>>>>>>>>>> AirPlay Service Started on port: " + mPort);
                     Socket sock = mSS.accept();
                     SocketProcessor.processSocket(sock);
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -209,5 +211,9 @@ public class AirPlay {
 
     public static void LOGE(String msg) {
         Log.e(tag, msg);
+    }
+
+    public static void LOGI(String msg) {
+        Log.i(tag, msg);
     }
 }

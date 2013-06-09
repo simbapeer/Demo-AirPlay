@@ -27,30 +27,24 @@
 
 package com.simba.demo.airplay.lab;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.net.InetSocketAddress;
-import java.net.URLDecoder;
+import java.nio.charset.CodingErrorAction;
 import java.util.Locale;
 
 import simba.org.apache.http.HttpException;
 import simba.org.apache.http.HttpRequest;
 import simba.org.apache.http.HttpResponse;
 import simba.org.apache.http.HttpResponseInterceptor;
-import simba.org.apache.http.HttpStatus;
 import simba.org.apache.http.MethodNotSupportedException;
-import simba.org.apache.http.entity.ContentType;
 import simba.org.apache.http.impl.DefaultConnectionReuseStrategy;
 import simba.org.apache.http.impl.nio.DefaultHttpServerIODispatch;
 import simba.org.apache.http.impl.nio.DefaultNHttpServerConnection;
 import simba.org.apache.http.impl.nio.DefaultNHttpServerConnectionFactory;
 import simba.org.apache.http.impl.nio.reactor.DefaultListeningIOReactor;
-import simba.org.apache.http.nio.NHttpConnection;
 import simba.org.apache.http.nio.NHttpConnectionFactory;
 import simba.org.apache.http.nio.NHttpServerConnection;
-import simba.org.apache.http.nio.entity.NFileEntity;
-import simba.org.apache.http.nio.entity.NStringEntity;
 import simba.org.apache.http.nio.protocol.BasicAsyncRequestConsumer;
 import simba.org.apache.http.nio.protocol.BasicAsyncResponseProducer;
 import simba.org.apache.http.nio.protocol.HttpAsyncExchange;
@@ -64,7 +58,6 @@ import simba.org.apache.http.params.BasicHttpParams;
 import simba.org.apache.http.params.CoreConnectionPNames;
 import simba.org.apache.http.params.CoreProtocolPNames;
 import simba.org.apache.http.params.HttpParams;
-import simba.org.apache.http.protocol.ExecutionContext;
 import simba.org.apache.http.protocol.HttpContext;
 import simba.org.apache.http.protocol.HttpProcessor;
 import simba.org.apache.http.protocol.ImmutableHttpProcessor;
@@ -72,7 +65,6 @@ import simba.org.apache.http.protocol.ResponseConnControl;
 import simba.org.apache.http.protocol.ResponseContent;
 import simba.org.apache.http.protocol.ResponseDate;
 import simba.org.apache.http.protocol.ResponseServer;
-
 import android.util.Log;
 
 /**
@@ -82,19 +74,33 @@ import android.util.Log;
 public class SimbaHttpServer extends Thread {
     private static final String tag = "SimbaHttpServer";
     private int mPort = -1;
+    private RequestCallback mRC;
+
+    public interface RequestCallback {
+        public void onPOST(HttpRequest request, HttpResponse response, HttpContext context);
+
+        public void onGET(HttpRequest request, HttpResponse response, HttpContext context);
+
+        public void onHEAD(HttpRequest request, HttpResponse response, HttpContext context);
+    }
 
     public SimbaHttpServer(int port) {
         mPort = port;
+    }
+
+    public SimbaHttpServer(int port, RequestCallback rc) {
+        this(port);
+        mRC = rc;
     }
 
     @Override
     public void run() {
         // HTTP parameters for the server
         HttpParams params = new BasicHttpParams();
-        params
-                .setIntParameter(CoreConnectionPNames.SO_TIMEOUT, 5000)
-                .setIntParameter(CoreConnectionPNames.SOCKET_BUFFER_SIZE, 8 * 1024)
-                .setParameter(CoreProtocolPNames.ORIGIN_SERVER, "HttpTest/1.1");
+        params.setIntParameter(CoreConnectionPNames.SO_TIMEOUT, 5000);
+        params.setIntParameter(CoreConnectionPNames.SOCKET_BUFFER_SIZE, 8 * 1024);
+        params.setParameter(CoreProtocolPNames.ORIGIN_SERVER, "HttpTest/1.1");
+        params.setParameter(CoreProtocolPNames.HTTP_MALFORMED_INPUT_ACTION, CodingErrorAction.IGNORE);
         // Create HTTP protocol processing chain
         HttpProcessor httpproc = new ImmutableHttpProcessor(new HttpResponseInterceptor[] {
                 // Use standard server-side protocol interceptors
@@ -106,7 +112,7 @@ public class SimbaHttpServer extends Thread {
         // Create request handler registry
         HttpAsyncRequestHandlerRegistry reqistry = new HttpAsyncRequestHandlerRegistry();
         // Register the default handler for all URIs
-        reqistry.register("*", new HttpFileHandler());
+        reqistry.register("*", new SimbaHttpHandler());
         // Create server-side HTTP protocol handler
         HttpAsyncService protocolHandler = new HttpAsyncService(
                 httpproc, new DefaultConnectionReuseStrategy(), reqistry, params) {
@@ -125,8 +131,8 @@ public class SimbaHttpServer extends Thread {
 
         };
         // Create HTTP connection factory
-        NHttpConnectionFactory<DefaultNHttpServerConnection> connFactory;
-        connFactory = new DefaultNHttpServerConnectionFactory(params);
+        NHttpConnectionFactory<DefaultNHttpServerConnection> connFactory = new DefaultNHttpServerConnectionFactory(
+                params);
 
         // Create server-side I/O event dispatch
         IOEventDispatch ioEventDispatch = new DefaultHttpServerIODispatch(protocolHandler, connFactory);
@@ -134,7 +140,8 @@ public class SimbaHttpServer extends Thread {
         try {
             ListeningIOReactor ioReactor = new DefaultListeningIOReactor();
             // Listen of the given port
-            ioReactor.listen(new InetSocketAddress(mPort));
+            InetSocketAddress isa = new InetSocketAddress(mPort);
+            ioReactor.listen(isa);
             // Ready to go!
             ioReactor.execute(ioEventDispatch);
         } catch (InterruptedIOException ex) {
@@ -145,9 +152,9 @@ public class SimbaHttpServer extends Thread {
         LOGD("Shutdown");
     }
 
-    static class HttpFileHandler implements HttpAsyncRequestHandler<HttpRequest> {
+    private class SimbaHttpHandler implements HttpAsyncRequestHandler<HttpRequest> {
 
-        public HttpFileHandler() {
+        public SimbaHttpHandler() {
             super();
         }
 
@@ -163,48 +170,25 @@ public class SimbaHttpServer extends Thread {
                 final HttpAsyncExchange httpexchange,
                 final HttpContext context) throws HttpException, IOException {
             HttpResponse response = httpexchange.getResponse();
-            handleInternal(request, response, context);
-            httpexchange.submitResponse(new BasicAsyncResponseProducer(response));
-        }
-
-        private void handleInternal(
-                final HttpRequest request,
-                final HttpResponse response,
-                final HttpContext context) throws HttpException, IOException {
-
             String method = request.getRequestLine().getMethod().toUpperCase(Locale.ENGLISH);
-            if (!method.equals("GET") && !method.equals("HEAD") && !method.equals("POST")) {
+            if (method.equals("GET")) {
+                if (mRC != null) {
+                    mRC.onGET(request, response, context);
+                }
+            } else if (method.equals("POST")) {
+                if (mRC != null) {
+                    mRC.onPOST(request, response, context);
+                }
+            } else if (method.equals("HEAD")) {
+                if (mRC != null) {
+                    mRC.onHEAD(request, response, context);
+                }
+            } else {
                 throw new MethodNotSupportedException(method + " method not supported");
             }
 
-            String target = request.getRequestLine().getUri();
-            final File file = new File("/sdcard/", URLDecoder.decode(target, "UTF-8"));
-            if (!file.exists()) {
-                response.setStatusCode(HttpStatus.SC_NOT_FOUND);
-                NStringEntity entity = new NStringEntity(
-                        "<html><body><h1>File" + file.getPath() +
-                                " not found</h1></body></html>",
-                        ContentType.create("text/html", "UTF-8"));
-                response.setEntity(entity);
-                LOGD("File " + file.getPath() + " not found");
-
-            } else if (!file.canRead() || file.isDirectory()) {
-
-                response.setStatusCode(HttpStatus.SC_FORBIDDEN);
-                NStringEntity entity = new NStringEntity(
-                        "<html><body><h1>Access denied</h1></body></html>",
-                        ContentType.create("text/html", "UTF-8"));
-                response.setEntity(entity);
-                LOGD("Cannot read file " + file.getPath());
-
-            } else {
-                NHttpConnection conn = (NHttpConnection) context.getAttribute(
-                        ExecutionContext.HTTP_CONNECTION);
-                response.setStatusCode(HttpStatus.SC_OK);
-                NFileEntity body = new NFileEntity(file, ContentType.create("text/html"));
-                response.setEntity(body);
-                LOGD(conn + ": serving file " + file.getPath());
-            }
+            // response
+            httpexchange.submitResponse(new BasicAsyncResponseProducer(response));
         }
 
     }

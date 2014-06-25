@@ -1,5 +1,13 @@
-
 package com.simba.demo.airplay;
+
+import com.simba.demo.airplay.srv.AirPlay;
+import com.simba.demo.utils.Utils;
+
+import android.app.Activity;
+import android.net.wifi.WifiInfo;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -8,15 +16,6 @@ import java.util.Random;
 
 import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceInfo;
-
-import android.app.Activity;
-import android.net.wifi.WifiInfo;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-
-import com.simba.demo.airplay.srv.AirPlay;
-import com.simba.demo.utils.Utils;
 
 public class MainActivity extends Activity {
 
@@ -50,8 +49,7 @@ public class MainActivity extends Activity {
         mTestThread.start();
     }
 
-    private void test1()
-    {
+    private void test1() {
         values.put("DvNm", "Android-" + random.nextInt(100000));
         values.put("RemV", "10000");
         values.put("DvTy", "iPod");
@@ -80,8 +78,7 @@ public class MainActivity extends Activity {
             values.put("deviceid", mWifiInfo.getMacAddress());
             values.put("features", "0x7");
 
-            ServiceInfo airPlayService = ServiceInfo.create(REMOTE_TYPE, name_subfix + "@Pateo Simba's", port, 0, 0,
-                    values);
+            ServiceInfo airPlayService = ServiceInfo.create(REMOTE_TYPE, name_subfix + "@Simba's", port, 0, 0, values);
             mJmDNS.registerService(airPlayService);
         } catch (IOException e) {
             e.printStackTrace();
@@ -89,7 +86,16 @@ public class MainActivity extends Activity {
     }
 
     private void testAirPort() {
-        ap = AirPlay.get(mJmDNS, this);
+        ap = AirPlay.get(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (ap != null) {
+            ap.destroy();
+        }
+        super.onDestroy();
+        System.exit(0);
     }
 
     @Override

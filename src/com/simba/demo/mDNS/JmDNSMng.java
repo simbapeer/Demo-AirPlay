@@ -32,6 +32,21 @@ public class JmDNSMng {
         mServiceThread.start();
     }
 
+    public void unregisterAllServices(){
+        mJmDNS.unregisterAllServices();
+    }
+    
+    public boolean unregisterService(ServiceInfo info) {
+        if (mJmDNS == null) {
+            LOGW("X unregisterService failed: JmDNS is NULL!");
+            return false;
+        } else {
+            mJmDNS.unregisterService(info);
+            LOGI("V unregisterService success! ");
+            return true;
+        }
+    }
+
     public boolean registerService(ServiceInfo info) {
         if (mJmDNS == null) {
             LOGW("X registerService failed: JmDNS is NULL!");
@@ -45,7 +60,7 @@ public class JmDNSMng {
                 return false;
             }
         }
-        LOGI("V registerService succeed! ");
+        LOGI("V registerService success! ");
         return true;
     }
 
@@ -67,7 +82,8 @@ public class JmDNSMng {
                     mJmDNS.addServiceTypeListener(mSampleListener);
                     mJmDNS.addServiceListener(AirPlay.TYPE_TP, mSampleListener);
                     mJmDNS.addServiceListener(RAOP.TYPE_TP, mSampleListener);
-                    Log.i(tag, ">>>>>>>>>>>>>>>>>> Create JmDNS Succeed!! <<<<<<<<<<<<<<<<<");
+                    mJmDNS.addServiceListener("_apple-mobdev2._tcp.local.", mSampleListener);
+                    Log.i(tag, ">>>>>>>>>>>>>>>>>> Create JmDNS Success!! <<<<<<<<<<<<<<<<<");
                 } else {
                     Log.e(tag, "X <<<<<<<<<<<<<<<<< Create JmDNS Failed!! WiFi disabled! >>>>>>>>>>>>>>>>>>>>");
                 }
@@ -89,7 +105,7 @@ public class JmDNSMng {
          */
         @Override
         public void serviceAdded(ServiceEvent event) {
-            LOGD("ADD: " + event.getDNS().getServiceInfo(event.getType(), event.getName()));
+            LOGD("SVC ADD: " + event.getDNS().getServiceInfo(event.getType(), event.getName()));
         }
 
         /**
@@ -99,7 +115,7 @@ public class JmDNSMng {
          */
         @Override
         public void serviceRemoved(ServiceEvent event) {
-            LOGD("REMOVE: " + event.getName());
+            LOGD("SVC REMOVE: " + event.getName());
         }
 
         /**
@@ -109,7 +125,7 @@ public class JmDNSMng {
          */
         @Override
         public void serviceResolved(ServiceEvent event) {
-            LOGD("RESOLVED: " + event.getInfo());
+            LOGD("SVC RESOLVED: " + event.getInfo());
         }
 
         /**
@@ -120,7 +136,7 @@ public class JmDNSMng {
          */
         @Override
         public void serviceTypeAdded(ServiceEvent event) {
-            LOGD("TYPE: " + event.getType());
+            LOGD("SVC TYPE ADD: " + event.getType());
         }
 
         /**
@@ -131,7 +147,7 @@ public class JmDNSMng {
          */
         @Override
         public void subTypeForServiceTypeAdded(ServiceEvent event) {
-            LOGD("SUBTYPE: " + event.getType());
+            LOGD("SVC SUBTYPE ADD: " + event.getType());
         }
     }
 

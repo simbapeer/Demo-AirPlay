@@ -22,6 +22,7 @@ import android.util.Log;
 import com.simba.demo.airplay.App;
 import com.simba.demo.airplay.lab.SimbaHttpServer;
 import com.simba.demo.airplay.lab.SimbaHttpServer.RequestCallback;
+import com.simba.demo.utils.Utils;
 
 public class MirroringDaemon {
     private static final String tag = "MirroringDaemon";
@@ -36,7 +37,8 @@ public class MirroringDaemon {
     private static final int SCREEN_WIDTH = 1280;// FIXME to be modified.
     private static final boolean OVER_SCANNED = false;
     private static final String REFRESH_RATE = "0.016666666666666666";
-    private static final String VERSION = "130.14";
+    private static final String VERSION = AirPlay.VERSION;
+    private static final int MD_PORT = 7100;
 
     private SimbaHttpServer.RequestCallback mHttpRC = new RequestCallback() {
 
@@ -131,7 +133,8 @@ public class MirroringDaemon {
                     }
                 }
                 String s = new String(buffer, 0, readCount);
-                LOGW("buffer: " + s);
+                LOGW("buffer hex: " + Utils.toHex(buffer));
+                LOGW("buffer str: " + s);
             } catch (IllegalStateException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -166,7 +169,7 @@ public class MirroringDaemon {
     }
 
     public MirroringDaemon() {
-        mHttpServer = new SimbaHttpServer(7100, mHttpRC);
+        mHttpServer = new SimbaHttpServer(MD_PORT, mHttpRC);
     }
 
     public void start() {

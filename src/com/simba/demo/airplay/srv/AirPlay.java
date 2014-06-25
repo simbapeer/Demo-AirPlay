@@ -8,14 +8,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceInfo;
 
 import android.content.Context;
-import android.net.wifi.WifiInfo;
+import android.os.Build;
 import android.util.Log;
 
 import com.simba.demo.airplay.WiFiMng;
+import com.simba.demo.airplay.raop.RAOPSocket;
 import com.simba.demo.mDNS.JmDNSMng;
 import com.simba.demo.utils.SocketDemo;
 import com.simba.demo.utils.SocketProcessor;
@@ -31,12 +31,17 @@ public class AirPlay {
 
     private static final Map<String, String> txtRd = new HashMap<String, String>();
 
-    private static String TR_KEY_DEVICE_ID = "deviceid";
-    private static String TR_KEY_FEATURES = "features";
-    private static String TR_KEY_SRV_VERSION = "srcvers";
-    private static String TR_KEY_APPLE_DEVICE_MODEL = "model";
+    private static final String TR_KEY_RHD = "rhd";
+    private static final String TR_KEY_DEVICE_ID = "deviceid";
+    private static final String TR_KEY_FEATURES = "features";
+    private static final String TR_KEY_SRV_VERSION = "srcvers";
+    private static final String TR_KEY_APPLE_DEVICE_MODEL = "model";
     /** server is password protected */
-    private static String TR_KEY_PASSWD_PROTECTED = "pw";
+    private static final String TR_KEY_PASSWD_PROTECTED = "pw";
+    private static final String TR_KEY_VV = "vv";
+    private static final String TR_KEY_FLAGS = "flags";
+    public static final String VERSION = "160.10";
+    public static final String FLAGS = "0x4";
 
     /** video supported */
     private static final int FEATURE_Video = 1;
@@ -62,10 +67,10 @@ public class AirPlay {
     /** FairPlay secure auth supported */
     private static final int FEATURE_FPSAPv2pt5_AES_GCM = 1 << 12;
     private static final int FEATURE_PhotoCaching = 1 << 13;
-    private ServiceInfo mServiceInfo = null;
+    private ServiceInfo mAirPlayServiceInfo = null;
+    private ServiceInfo mRAOPServiceInfo = null;
     private static AirPlay sInstance = null;
     private static Object sLock = new Object();
-    private WifiInfo mWifiInfo; // FIXME get Wifi Info
 
     private String srvName;
     private String mac;
@@ -83,19 +88,26 @@ public class AirPlay {
             FEATURE_ScreenRotate |
             FEATURE_AudioRedundant |
             FEATURE_PhotoCaching;
+    public static final String SUPPORATED_FEATURES_STR = "0x100029FF";
+    public static final String APPLE_DEVICE_MODEL = "AppleTV2,1";
 
     static {
-        txtRd.put(TR_KEY_FEATURES, "0x" + Integer.toHexString(SUPPORTED_FEATURES));
+        // txtRd.put(TR_KEY_FEATURES, "0x" +
+        // Integer.toHexString(SUPPORTED_FEATURES));
+        // txtRd.put(TR_KEY_RHD, "1.9.0");
         // txtRd.put(TR_KEY_PASSWD_PROTECTED, "1"); //FIXME ???
-        txtRd.put(TR_KEY_SRV_VERSION, "130.14");
-        // txtRd.put(TR_KEY_APPLE_DEVICE_MODEL, "AppleTV2,1");// device model
+        txtRd.put(TR_KEY_FEATURES, SUPPORATED_FEATURES_STR);
+        txtRd.put(TR_KEY_FLAGS, FLAGS);
+        txtRd.put(TR_KEY_VV, "1");
+        txtRd.put(TR_KEY_SRV_VERSION, "160.10");
+        txtRd.put(TR_KEY_APPLE_DEVICE_MODEL, APPLE_DEVICE_MODEL);// device model
         // FIXME 加上Device Model后识别不到了
     }
 
-    public static AirPlay get(JmDNS mDNSService, Context context) {
+    public static AirPlay get(Context context) {
         synchronized (sLock) {
             if (sInstance == null) {
-                sInstance = new AirPlay(mDNSService, context);
+                sInstance = new AirPlay(context);
             }
             return sInstance;
         }
@@ -107,8 +119,8 @@ public class AirPlay {
 
     @Override
     public String toString() {
-        if (mServiceInfo != null) {
-            return mServiceInfo.toString();
+        if (mAirPlayServiceInfo != null) {
+            return mAirPlayServiceInfo.toString();
         }
         return super.toString();
     }
@@ -117,21 +129,18 @@ public class AirPlay {
     private Worker mWorker = null;
 
     public void start() {
+        new SocketDemo(7000).start();
+
+        new RAOPSocket(RAOP.RAOP_SERVICE_PORT, mac).start();
+        registerRAOPService();
+
         mMirroringDaemon.start();
-        // new SocketDemo(7100).start();
-        registerService();
+        registerAirPlayService();
         mWorker.start();
-        new SocketDemo(1234).start(); // TEST CODE
     }
 
-    private AirPlay(JmDNS mDNSService, Context context) {
+    private AirPlay(Context context) {
         mContext = context;
-        Random random = new Random();
-        byte[] name = new byte[5];
-        random.nextBytes(name);
-        String name_prefix = Utils.toHex(name);
-        System.out.println("Requesting pairing for " + name_prefix);
-        this.srvName = name_prefix + "@AS21 Simba's";
 
         try {
             mSS = new ServerSocket(0);
@@ -142,24 +151,25 @@ public class AirPlay {
             LOGE("Create Socket Failed!");
             return;
         }
-        this.mac = WiFiMng.get(mContext).getMAC();
+        this.mac = WiFiMng.get(mContext).getMAC().toUpperCase();
         if (mac != null) {
             txtRd.put(TR_KEY_DEVICE_ID, this.mac);
         }
+        this.srvName = getRandomName("airp");
         this.mPort = mSS.getLocalPort();
         mProps = txtRd;
-        mServiceInfo = ServiceInfo.create(TYPE_TP, srvName, "", mPort, 0, 0, false, mProps);
-        LOGW("mDNSService Created!");
+        mAirPlayServiceInfo = ServiceInfo.create(TYPE_TP, srvName, "", mPort, 0, 0, false, mProps);
+        LOGW("mServiceInfo Created! : " + mAirPlayServiceInfo);
         LOGD(toString());
         mMirroringDaemon = new MirroringDaemon();
         mWorker = new Worker();
         start();
     }
 
-    private void registerService() {
+    private void registerAirPlayService() {
         int tryTimes = 1;
-        while (!JmDNSMng.get(mContext).registerService(mServiceInfo)) {
-            LOGW("Register service failed");
+        while (!JmDNSMng.get(mContext).registerService(mAirPlayServiceInfo)) {
+            LOGW("Register AirPlay service failed");
             if (tryTimes >= 10) {
                 LOGW("Maximum times tried... Won't Try Again!");
                 return;
@@ -174,6 +184,43 @@ public class AirPlay {
             LOGD("Try Again...");
             tryTimes++;
         }
+    }
+
+    private void registerRAOPService() {
+        int tryTimes = 1;
+        ServiceInfo raopSvc = RAOP.get(getRandomName("raop"));
+        mRAOPServiceInfo = raopSvc;
+        while (!JmDNSMng.get(mContext).registerService(raopSvc)) {
+            LOGW("Register RAOP service failed");
+            if (tryTimes >= 10) {
+                LOGW("Maximum times tried... Won't Try Again!");
+                return;
+            }
+            try {
+                LOGD("Sleep 1000ms");
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            LOGD("Try Again...");
+            tryTimes++;
+        }
+    }
+
+    public void destroy() {
+        LOGD("Unregister AirPlay and RAOP service! ");
+        JmDNSMng.get(mContext).unregisterAllServices();
+    }
+
+    private String getRandomName(String pre) {
+        Random random = new Random();
+        byte[] name = new byte[2];
+        random.nextBytes(name);
+        String name_prefix = Utils.toHex(name);
+        System.out.println("Requesting pairing for " + name_prefix);
+        String ret = this.mac + "@" + pre + "_" + name_prefix + "_" + Build.BRAND;
+        return ret;
     }
 
     private class Worker extends Thread {
